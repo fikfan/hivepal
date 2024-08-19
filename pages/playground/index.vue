@@ -1,12 +1,6 @@
 <template>
   <div class="container mx-auto p-8">
     <h1 class="text-3xl font-bold mb-8">Component Playground</h1>
-
-    <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4">Theme</h2>
-      <ThemeToggle />
-    </section>
-
     <section class="mb-12">
       <h2 class="text-2xl font-semibold mb-4">Typography</h2>
       <div class="space-y-2">

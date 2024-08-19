@@ -3,7 +3,7 @@
     <NuxtLink to="/" class="text-lg">hivepal</NuxtLink>
 
     <div class="flex gap-4 items-center">
-      <NuxtLink to="/home">Home</NuxtLink>
+      <NuxtLink to="/">Home</NuxtLink>
       <div>post task</div>
       <div>browse tasks</div>
       <div>faq</div>
@@ -22,8 +22,8 @@
           :class="isDark ? 'rotate-90 scale-0' : 'rotate-0 scale-100'"
         />
       </Button>
-      <NuxtLink to="/auth/signup">sign up</NuxtLink>
-      <NuxtLink to="/auth/login">login</NuxtLink>
+      <NuxtLink to="/auth">sign up</NuxtLink>
+      <NuxtLink to="/auth">login</NuxtLink>
       <NuxtLink to="/auth/join">become a pal</NuxtLink>
 
     </div>
