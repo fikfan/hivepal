@@ -1,16 +1,12 @@
 <template>
   <div>
-    <form @submit.prevent="handleLogin">
+    <form @submit.prevent="onSubmit">
       <div>
         <Input 
         v-model="email" 
-        type="email"
         id="email" 
         placeholder="Email" 
-        required
-        :class="{ 'border-red-500': errors.email }" 
         class="mb-4"/>
-        <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
       </div>
       
       <div>
@@ -19,12 +15,9 @@
         type="password"
         id="password" 
         placeholder="Password" 
-        :class="{ 'border-red-500': errors.password }" 
-        required 
         class="mb-4"/>
-        <p v-if="errors.password" class="text-red-500 text-sm mt-1">{{ errors.password }}</p>
       </div>
-      
+      <p v-if="formError" class="text-red-500 text-sm my-2">{{ formError }}</p>
       <Button type="submit" class="w-full" :disabled="isLoading">{{ isLoading ? 'Logging in...' : 'Log In' }}</Button>
     </form>
     <div class="mx-auto mt-4">
@@ -36,59 +29,32 @@
 
 <script setup>
 import { ref } from 'vue'
-import { mockSupabase } from '~/utils/mockSupabase';
+import { handleLogin } from '~/utils/loginHandler';
 
 // const { $supabase } = useNuxtApp()
 
 const isLoading = ref(false)
-const errors = reactive({})
 const email = ref('')
+const formError = ref('')
 const password = ref('')
 
-// const emit = defineEmits(['toggle-signup'])
 const emit = defineEmits(['login-success', 'login-error'])
 
-const validateForm = () => {
-  errors.email = !email.value ? 'Email is required' : 
-                 !/^[^\s@]+@[^\s@]+$/.test(email.value) ? 'Invalid email format' : ''
-  errors.password = !password.value ? 'Password is required' : ''
-  return Object.values(errors).every(val => val === '')
-}
 
-// const handleLogin = async () => {
-//   try {
-//     const { data, error } = await $supabase.auth.signInWithPassword({
-//       email: email.value,
-//       password: password.value,
-//     })
-//     if (error) throw error
-//     console.log('User logged in:', data)
-//     // Here you might want to redirect the user or update the UI
-//   } catch (error) {
-//     console.error('Error logging in:', error.message)
-//     // Here you might want to show an error message to the user
-//   }
-// }
-
-const handleLogin = async () => {
-  if (!validateForm()) return
-
+const onSubmit = async () => {
   isLoading.value = true
+  formError.value = ''
 
-  try {
-    const { data, error } = await mockSupabase.auth.signInWithPassword({
-      email: email.value,
-      password: password.value,
-    })
-    if (error) throw error
-    console.log('success')
+  const { data, error } = await handleLogin(email.value, password.value)
+
+  if (error) {
+    formError.value = error
+    emit('login-error', error)
+  } else {
     emit('login-success', 'Logged in successfully!')
-  } catch (error) {
-    console.log('something wong')
-    emit('login-error', error.message || 'An error occurred during login')
-  } finally {
-    isLoading.value = false
   }
+
+  isLoading.value = false
 }
 
 const toggleSignup = () => {

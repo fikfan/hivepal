@@ -12,6 +12,10 @@ export const mockSupabase = {
     signUp: async ({ email, password }) => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      if (email === 'existing@example.com') {
+        return { data: null, error: { message: 'Email already in use' } };
+      }
+      
       if (email.includes('@') && password.length >= 8) {
         return { data: { user: { id: '2', email } }, error: null };
       }
